@@ -1,12 +1,13 @@
 server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-
         # SSL configuration
         #
-        # listen 443 ssl default_server;
-        # listen [::]:443 ssl default_server;
-        #
+         listen 443 ssl default_server;
+         listen [::]:443 ssl default_server;
+        
+                ssl_certificate /etc/nginx/certpub.pem;
+                ssl_certificate_key /etc/nginx/certprv.key;
+
+		#
         # Note: You should disable gzip for SSL traffic.
         # See: https://bugs.debian.org/773332
         #
@@ -22,7 +23,7 @@ server {
 
         # Add index.php to the list if you are using PHP
         index index.php index.html index.htm index.nginx-debian.html;
-
+		autoindex on;
         server_name _;
 
         location / {
@@ -56,16 +57,10 @@ server {
 # You can move that to a different file under sites-available/ and symlink that
 # to sites-enabled/ to enable it.
 #
-#server {
-#       listen 80;
-#       listen [::]:80;
-#
-#       server_name example.com;
-#
-#       root /var/www/example.com;
-#       index index.html;
-#
-#       location / {
-#               try_files $uri $uri/ =404;
-#       }
-#}
+server {
+    listen 80 default_server;
+
+    server_name _;
+
+    return 301 https://$host$request_uri;
+}
